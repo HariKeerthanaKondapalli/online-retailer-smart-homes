@@ -1,25 +1,56 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Header, Footer, SideMenu } from "./components/organisms";
+import HomeDashboard from "./components/pages/HomeDashboard/HomeDashboard";
+import Cart from "./components/pages/Cart/Cart";
 
-function App() {
+const App = () => {
+  const [selectedCategory, setSelectedCategory] = useState({});
+  const [currentPage, setCurrentPage] = useState("");
+
+  const handleMenuNavigation = (category) => {
+    setCurrentPage("home");
+    setSelectedCategory(category);
+  };
+
+  const handleContentNavigation = (page) => {
+    setCurrentPage(page);
+  };
+
+  const renderContent = () => {
+    switch (currentPage) {
+      case "cart":
+        return <Cart />;
+      case "home":
+      default:
+        return <HomeDashboard category={selectedCategory} />;
+    }
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header handleNavigation={handleContentNavigation} />
+      <div style={styles.contentStyle}>
+        <SideMenu handleNavigation={handleMenuNavigation} />
+        <div style={styles.container}>{renderContent()}</div>
+      </div>
+      <Footer />
+    </>
   );
-}
+};
 
+const styles = {
+  contentStyle: {
+    height: window.innerHeight - 80,
+    backgroundColor: "#002B80",
+    display: "flex",
+    flex: 1,
+    flexDirection: "row",
+    paddingLeft: 30,
+    paddingRight: 30,
+    gap: 30,
+  },
+  container: {
+    backgroundColor: "#fff",
+    width: "85%",
+  },
+};
 export default App;
