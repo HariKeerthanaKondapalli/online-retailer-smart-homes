@@ -13,4 +13,9 @@ const removeAllCartItems = () => ({
   payload: {},
 });
 
-export { addToCart, removeFromCart, removeAllCartItems };
+const setSelectedCategory = (category) => ({
+  type: "SET_SELECTED_CATEGORY",
+  payload: category,
+});
+
+export { addToCart, removeFromCart, removeAllCartItems, setSelectedCategory };

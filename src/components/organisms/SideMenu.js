@@ -6,7 +6,7 @@ const SideMenu = ({ handleNavigation = () => {} }) => {
     <div style={styles.container}>
       {categories?.map((category) => (
         <div
-          key={category.id.id}
+          key={category.id}
           onClick={() => handleNavigation(category)}
           style={styles.categoryContainer}
         >

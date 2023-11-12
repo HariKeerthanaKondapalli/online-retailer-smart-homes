@@ -1,5 +1,6 @@
 const initialState = {
   cart: [],
+  selectedCategory: {},
 };
 
 const cartReducer = (state = initialState, action) => {
@@ -13,6 +14,8 @@ const cartReducer = (state = initialState, action) => {
       };
     case "DELETE_CART":
       return { ...state, cart: [] };
+    case "SET_SELECTED_CATEGORY":
+      return { ...state, selectedCategory: action.payload };
     default:
       return state;
   }

@@ -1,12 +1,12 @@
 import React from "react";
 import SimpleTemplate from "../../templates/SimpleTemplate";
 
-const Cart = () => {
+const Account = () => {
   return (
     <SimpleTemplate>
-      <div>Cart</div>
+      <div>Account</div>
     </SimpleTemplate>
   );
 };
 
-export default Cart;
+export default Account;

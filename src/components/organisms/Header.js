@@ -11,6 +11,7 @@ import {
 import Button from "./Button";
 import { isEmpty } from "../../lib/helpers";
 import { logout } from "../../redux/actions/authActions";
+import { useNavigate } from "react-router-dom";
 
 const headerStyle = {
   backgroundColor: "#002B80",
@@ -24,8 +25,9 @@ const welcomeText = {
   fontSize: 15,
   fontWeight: "bold",
 };
-const Header = ({ handleNavigation = () => {} }) => {
+const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loggedInUserId } = useSelector((state) => state.authReducer);
   const { users } = useSelector((state) => state.userReducer);
   const { cart } = useSelector((state) => state.cartReducer);
@@ -37,6 +39,11 @@ const Header = ({ handleNavigation = () => {} }) => {
 
   const handleLogout = () => {
     dispatch(logout());
+    navigate("/");
+  };
+
+  const handleNavigation = (page) => {
+    navigate(`/${page}`);
   };
 
   return (
