@@ -12,9 +12,16 @@ const HomeDashboard = () => {
     (state) => state.cartReducer
   );
 
+  const { loggedInUserId } = useSelector(
+    (state) => state.authReducer
+  );
+  
   const handleCart = (itemId) => {
     const item = category?.items?.find((i) => i.id === itemId);
-    dispatch(addToCart(item));
+    if(!isEmpty(loggedInUserId))
+    {
+      dispatch(addToCart(item));
+    };
   };
 
   return (

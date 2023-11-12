@@ -1,53 +1,38 @@
 import React, { useState } from 'react';
 import './LoginModal.css'; // Import your CSS file for styling
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../../redux/actions/authActions';
-import Register from '../Login/Register';
-import Button from "../../organisms/Button";
+import { register } from '../../../redux/actions/authActions'; // Assuming you have a register action
 
-
-const Login = ({ isOpen, onClose }) => {
+const Register = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [selectedOption, setSelectedOption] = useState('customer');
-  const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
   const { users } = useSelector((state) => state.userReducer);
 
-  const handleLogin = () => {
-    // Implement your login logic here
-    console.log(`Logging in with username: ${username} and password: ${password}`);
-    const user = users?.find((u) => u.name === username && u.password === password && u.type === selectedOption);
-    if (!user) {
-      alert('Invalid username or password');
+  const handleRegister = () => {
+    // Check if the username already exists
+    const existingUser = users.find((u) => u.name === username);
+    if (existingUser) {
+      alert('Username already exists');
       return;
     }
-    dispatch(login(user.id));
-    
-    onClose(); // Close the modal after login attempt (you may want to handle this differently in a real application)
-  };
 
-  const handleOpenRegister = () => {
-    setRegisterModalOpen(true);
-  };
+    // If the username is unique, dispatch the register action
+    console.log(`Registering with username: ${username} and password: ${password}`);
+    dispatch(register({ name: username, password, type: selectedOption }));
 
-  const handleCloseRegister = () => {
-    setRegisterModalOpen(false);
-  };
+    // Optionally, you might want to dispatch a login action here if needed
+    // dispatch(login(user.id));
 
-  const handleRegisterNavigation = () => {
-    handleOpenRegister();
-  };
-
-  const handleCloseModal = () => {
-    handleCloseRegister();
+    onClose(); // Close the modal after registration (you may want to handle this differently in a real application)
   };
 
   return (
     <div className={`modal ${isOpen ? 'open' : ''}`}>
       <div className="modal-content">
         <span className="close-button" onClick={onClose}>&times;</span>
-        <h2>Login</h2>
+        <h2>Register</h2>
         <form>
           <label htmlFor="username">Username:</label>
           <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
@@ -61,18 +46,12 @@ const Login = ({ isOpen, onClose }) => {
             <option value="storemanager">Store Manager</option>
             <option value="salesmanager">Sales Manager</option>
           </select>
-          
-          <button type="button" onClick={handleLogin}>Login</button>
-          <Button
-          buttonName="Register"
-          onClick={handleRegisterNavigation}
-          
-        />
-          <Register isOpen={isRegisterModalOpen} onClose={handleCloseModal} />
+
+          <button type="button" onClick={handleRegister}>Register</button>
         </form>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;

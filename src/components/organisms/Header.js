@@ -13,6 +13,7 @@ import Button from "./Button";
 import { isEmpty } from "../../lib/helpers";
 import { logout } from "../../redux/actions/authActions";
 import Login from "../pages/Login/Login";
+import { removeAllCartItems } from "../../redux/actions/cartActions";
 
 const headerStyle = {
   backgroundColor: "#002B80",
@@ -45,6 +46,7 @@ const Header = () => {
   };
 
   const handleLogout = () => {
+    dispatch(removeAllCartItems());
     dispatch(logout());
     navigate("/");
   };
@@ -52,6 +54,8 @@ const Header = () => {
   const handleNavigation = (page) => {
     navigate(`/${page}`);
   };
+
+  
 
   return (
     <div style={headerStyle}>
@@ -90,6 +94,7 @@ const Header = () => {
         )}
       />
       <Login isOpen={isModalOpen} onClose={handleCloseModal} />
+
     </div>
   );
 };
