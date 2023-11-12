@@ -3,16 +3,9 @@ const login = (userId) => ({
   payload: userId,
 });
 
-const register = (userId) => ({
-  type: "REGISTER",
-  payload: userId,
-});
-
 const logout = () => ({
   type: "LOGOUT",
   payload: {},
 });
 
-
-
-export { login, logout , register};
+export { login, logout };

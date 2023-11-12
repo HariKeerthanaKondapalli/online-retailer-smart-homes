@@ -34,10 +34,13 @@ const styles = {
     paddingLeft: 30,
     paddingRight: 30,
     gap: 30,
+    overflow: "hidden",
   },
   container: {
     backgroundColor: "#fff",
     width: "85%",
+    height: window.innerHeight - 80,
+    overflow: "scroll",
   },
 };
 

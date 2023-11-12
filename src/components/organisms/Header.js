@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import {
   ShoppingCartOutlined,
   LogoutOutlined,
   UserOutlined,
+  HomeOutlined,
 } from "@ant-design/icons";
 
 import Button from "./Button";
@@ -24,8 +25,10 @@ const headerStyle = {
 
 const welcomeText = {
   color: "#fff",
-  fontSize: 15,
+  fontSize: 18,
   fontWeight: "bold",
+  marginTop: 22,
+  marginRight: 10,
 };
 const Header = () => {
   const dispatch = useDispatch();
@@ -34,15 +37,10 @@ const Header = () => {
   const { users } = useSelector((state) => state.userReducer);
   const { cart } = useSelector((state) => state.cartReducer);
   const user = users?.find((u) => u.id === loggedInUserId);
-  console.log(loggedInUserId,user);
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
-  
-  const handleLoginNavigation = () => {
-    setModalOpen(true);
+  const handleLoginModal = () => {
+    setModalOpen(!isModalOpen);
   };
 
   const handleLogout = () => {
@@ -52,16 +50,27 @@ const Header = () => {
   };
 
   const handleNavigation = (page) => {
-    navigate(`/${page}`);
+    if (!isEmpty(loggedInUserId)) {
+      navigate(`/${page}`, {
+        state: { fromHeader: true },
+      });
+      return;
+    }
+    handleLoginModal();
   };
-
-  
 
   return (
     <div style={headerStyle}>
       {!isEmpty(loggedInUserId) ? (
         <>
           <p style={welcomeText}>Hello {user.name}</p>
+          <Button
+            buttonName="Home"
+            onClick={() => handleNavigation("")}
+            renderIcon={() => (
+              <HomeOutlined style={{ color: "white", paddingRight: 6 }} />
+            )}
+          />
           <Button
             buttonName="Account"
             onClick={() => handleNavigation("account")}
@@ -80,7 +89,7 @@ const Header = () => {
       ) : (
         <Button
           buttonName="Login"
-          onClick={handleLoginNavigation}
+          onClick={handleLoginModal}
           renderIcon={() => (
             <LoginOutlined style={{ color: "white", paddingRight: 6 }} />
           )}
@@ -93,8 +102,7 @@ const Header = () => {
           <ShoppingCartOutlined style={{ color: "white", paddingRight: 6 }} />
         )}
       />
-      <Login isOpen={isModalOpen} onClose={handleCloseModal} />
-
+      <Login isOpen={isModalOpen} onClose={handleLoginModal} />
     </div>
   );
 };

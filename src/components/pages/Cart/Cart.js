@@ -1,25 +1,66 @@
 import React from "react";
-import SimpleTemplate from "../../templates/SimpleTemplate";
 import { useDispatch, useSelector } from "react-redux";
-import { removeAllCartItems } from "../../../redux/actions/cartActions";
+
+import SimpleTemplate from "../../templates/SimpleTemplate";
+import { Button } from "../../organisms";
+import { removeFromCart } from "../../../redux/actions/cartActions";
+import { useNavigate } from "react-router-dom";
+import DisplayCartItem from "./DisplayCartItem";
 
 const Cart = () => {
-  const {cart} = useSelector((state) => state.cartReducer);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { cart } = useSelector((state) => state.cartReducer);
 
-  console.log(cart);
+  const handleRemoveItem = (itemId) => {
+    dispatch(removeFromCart(itemId));
+  };
+
+  const handleCheckout = () => {
+    navigate("/order");
+  };
+
   return (
     <SimpleTemplate>
-      <div>
-        Cart
-      </div>
-      {cart.map((item) => (
-        <div key={item.id}>
-          <p>{item.name}</p>
-          <p>{item.price}</p>
+      <h2 style={styles.title}>Cart</h2>
+      <div style={styles.divider} />
+      {cart?.length ? (
+        <div>
+          {cart.map((item) => (
+            <DisplayCartItem
+              item={item}
+              handleRemoveItem={handleRemoveItem}
+              showRemoveButton
+            />
+          ))}
+          <div style={{ textAlign: "-webkit-center" }}>
+            <Button
+              buttonName="Checkout"
+              buttonStyles={styles.buttonStyle}
+              onClick={handleCheckout}
+            />
+          </div>
         </div>
-      ))}
+      ) : (
+        <h2 style={styles.title}>No items in cart</h2>
+      )}
     </SimpleTemplate>
   );
+};
+
+const styles = {
+  title: {
+    color: "#002B80",
+    paddingLeft: 40,
+  },
+  divider: {
+    backgroundColor: "black",
+    height: 2,
+  },
+  buttonStyle: {
+    backgroundColor: "#002B80",
+    marginBottom: 20,
+  },
 };
 
 export default Cart;

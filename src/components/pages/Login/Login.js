@@ -1,78 +1,198 @@
-import React, { useState } from 'react';
-import './LoginModal.css'; // Import your CSS file for styling
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../../redux/actions/authActions';
-import Register from '../Login/Register';
+import React, { useState } from "react";
+import "./LoginModal.css"; // Import your CSS file for styling
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../../redux/actions/authActions";
 import Button from "../../organisms/Button";
-
+import { addUser } from "../../../redux/actions/userActions";
+import { useNavigate } from "react-router-dom";
 
 const Login = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [selectedOption, setSelectedOption] = useState('customer');
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [selectedOption, setSelectedOption] = useState("customer");
+
+  const [registerUserName, setRegisterUserName] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [registerSelectedOption, setRegisterSelectedOption] =
+    useState("customer");
+
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
-  const { users } = useSelector((state) => state.userReducer);
+  const { users, currentUserId } = useSelector((state) => state.userReducer);
 
   const handleLogin = () => {
-    // Implement your login logic here
-    console.log(`Logging in with username: ${username} and password: ${password}`);
-    const user = users?.find((u) => u.name === username && u.password === password && u.type === selectedOption);
+    const user = users?.find(
+      (u) =>
+        u.name === username &&
+        u.password === password &&
+        u.type === selectedOption
+    );
     if (!user) {
-      alert('Invalid username or password');
+      alert("Invalid username or password");
       return;
     }
     dispatch(login(user.id));
-    
-    onClose(); // Close the modal after login attempt (you may want to handle this differently in a real application)
-  };
 
-  const handleOpenRegister = () => {
-    setRegisterModalOpen(true);
-  };
-
-  const handleCloseRegister = () => {
-    setRegisterModalOpen(false);
+    onModalClose(); // Close the modal after login attempt (you may want to handle this differently in a real application)
+    navigate("/");
   };
 
   const handleRegisterNavigation = () => {
-    handleOpenRegister();
+    setRegisterModalOpen(!isRegisterModalOpen);
+    isRegisterModalOpen && onModalClose();
   };
 
-  const handleCloseModal = () => {
-    handleCloseRegister();
+  const handleRegister = () => {
+    const user = users?.find(
+      (u) => u.name === registerUserName && u.type === registerSelectedOption
+    );
+    if (user) {
+      alert("Already existing user, Please Login or use different username");
+      return;
+    }
+    dispatch(
+      addUser({
+        id: currentUserId + 1,
+        name: registerUserName,
+        type: registerSelectedOption,
+        password: registerPassword,
+      })
+    );
+    handleRegisterNavigation();
+  };
+  const onModalClose = () => {
+    setUsername("");
+    setPassword("");
+    setSelectedOption("customer");
+    setRegisterUserName("");
+    setRegisterPassword("");
+    setRegisterSelectedOption("customer");
+    onClose();
   };
 
-  return (
-    <div className={`modal ${isOpen ? 'open' : ''}`}>
-      <div className="modal-content">
-        <span className="close-button" onClick={onClose}>&times;</span>
-        <h2>Login</h2>
-        <form>
-          <label htmlFor="username">Username:</label>
-          <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
-
-          <label htmlFor="password">Password:</label>
-          <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-
-          <label htmlFor="type">Type:</label>
-          <select id="type" value={selectedOption} onChange={(e) => setSelectedOption(e.target.value)}>
-            <option value="customer">Customer</option>
-            <option value="storemanager">Store Manager</option>
-            <option value="salesmanager">Sales Manager</option>
-          </select>
-          
-          <button type="button" onClick={handleLogin}>Login</button>
-          <Button
-          buttonName="Register"
-          onClick={handleRegisterNavigation}
-          
+  const renderLoginContent = () => (
+    <div className="modal-content">
+      <span className="close-button" onClick={onModalClose}>
+        &times;
+      </span>
+      <h2>Login</h2>
+      <div style={styles.form}>
+        <label htmlFor="username">Username:</label>
+        <input
+          type="text"
+          id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
         />
-          <Register isOpen={isRegisterModalOpen} onClose={handleCloseModal} />
-        </form>
+
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <label htmlFor="type">Type:</label>
+        <select
+          id="type"
+          value={selectedOption}
+          onChange={(e) => setSelectedOption(e.target.value)}
+          required
+        >
+          <option value="customer">Customer</option>
+          <option value="storemanager">Store Manager</option>
+          <option value="salesmanager">Sales Manager</option>
+        </select>
+        <Button
+          buttonName="Login"
+          onClick={handleLogin}
+          buttonStyles={styles.buttonStyles}
+          textStyles={styles.textStyles}
+        />
+        <div onClick={handleRegisterNavigation} style={styles.registerText}>
+          Not Registered? Register here
+        </div>
       </div>
     </div>
   );
+
+  const renderRegisterContent = () => (
+    <div className="modal-content">
+      <span className="close-button" onClick={handleRegisterNavigation}>
+        &times;
+      </span>
+      <h2>Register</h2>
+      <form onSubmit={handleRegister}>
+        <label htmlFor="username">Username:</label>
+        <input
+          type="text"
+          id="username"
+          value={registerUserName}
+          onChange={(e) => setRegisterUserName(e.target.value)}
+          required
+        />
+
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          value={registerPassword}
+          onChange={(e) => setRegisterPassword(e.target.value)}
+          required
+        />
+
+        <label htmlFor="type">Type:</label>
+        <select
+          id="type"
+          value={registerSelectedOption}
+          onChange={(e) => setRegisterSelectedOption(e.target.value)}
+          required
+        >
+          <option value="customer">Customer</option>
+          <option value="storemanager">Store Manager</option>
+          <option value="salesmanager">Sales Manager</option>
+        </select>
+
+        <Button
+          buttonName="Register"
+          onClick={handleRegister}
+          buttonStyles={styles.buttonStyles}
+          textStyles={styles.textStyles}
+        />
+      </form>
+    </div>
+  );
+
+  return (
+    <div className={`modal ${isOpen ? "open" : ""}`}>
+      {isRegisterModalOpen ? renderRegisterContent() : renderLoginContent()}
+    </div>
+  );
+};
+
+const styles = {
+  buttonStyles: {
+    backgroundColor: "#002B80",
+    paddingTop: 0,
+    paddingBottom: 0,
+    marginTop: 16,
+    justifyContent: "center",
+  },
+  textStyles: {
+    textAlign: "center",
+  },
+  registerText: {
+    margin: 10,
+    textDecoration: "underline",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+  },
 };
 
 export default Login;

@@ -28,6 +28,8 @@ const styles = {
   },
   buttonStyle: {
     backgroundColor: "#002B80",
+    paddingTop: 0,
+    paddingBottom: 0,
   },
 };
 

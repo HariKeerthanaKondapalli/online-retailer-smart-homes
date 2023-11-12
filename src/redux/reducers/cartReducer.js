@@ -1,6 +1,8 @@
 const initialState = {
   cart: [],
   selectedCategory: {},
+  orders: [],
+  currentOrderId: 0,
 };
 
 const cartReducer = (state = initialState, action) => {
@@ -16,6 +18,17 @@ const cartReducer = (state = initialState, action) => {
       return { ...state, cart: [] };
     case "SET_SELECTED_CATEGORY":
       return { ...state, selectedCategory: action.payload };
+    case "PLACE_ORDER":
+      return {
+        ...state,
+        orders: [...state.orders, action.payload],
+        currentOrderId: state.currentOrderId + 1,
+      };
+    case "CANCEL_ORDER":
+      return {
+        ...state,
+        orders: state.orders.filter((order) => order.id !== action.payload),
+      };
     default:
       return state;
   }

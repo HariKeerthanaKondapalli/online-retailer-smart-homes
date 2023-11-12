@@ -3,16 +3,21 @@ const initialState = {
     {
       id: "c1",
       name: "abhi",
-      type: "storemanager",
+      type: "salesmanager",
       password: "1234",
     },
   ],
+  currentUserId: 0,
 };
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case "ADD_USER":
-      return { ...state, users: [...state.users, action.payload] };
+      return {
+        ...state,
+        users: [...state.users, action.payload],
+        currentUserId: state.currentUserId + 1,
+      };
     case "REMOVE_USER":
       return {
         ...state,

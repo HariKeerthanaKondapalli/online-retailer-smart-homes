@@ -18,4 +18,21 @@ const setSelectedCategory = (category) => ({
   payload: category,
 });
 
-export { addToCart, removeFromCart, removeAllCartItems, setSelectedCategory };
+const placeOrder = (order) => ({
+  type: "PLACE_ORDER",
+  payload: order,
+});
+
+const cancelOrder = (orderId) => ({
+  type: "CANCEL_ORDER",
+  payload: orderId,
+});
+
+export {
+  addToCart,
+  removeFromCart,
+  removeAllCartItems,
+  setSelectedCategory,
+  placeOrder,
+  cancelOrder,
+};

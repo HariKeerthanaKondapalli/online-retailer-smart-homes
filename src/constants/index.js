@@ -158,8 +158,8 @@ const categories = [
 
 const userTypes = {
   CUSTOMER: "customer",
-  STORE_MANAGER: "store-manager",
-  SALES_MANAGER: "sales-manager",
+  STORE_MANAGER: "storemanager",
+  SALES_MANAGER: "salesmanager",
 };
 
 export { categories, userTypes };
