@@ -10,7 +10,7 @@ const WelcomePage = () => {
   const { users } = useSelector((state) => state.userReducer);
   const user = users?.find((u) => u.id === loggedInUserId);
 
-  switch (user.type) {
+  switch (user?.type) {
     case userTypes.STORE_MANAGER:
       return (
         <div>

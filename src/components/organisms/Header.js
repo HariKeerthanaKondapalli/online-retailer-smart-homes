@@ -1,6 +1,7 @@
-import React from "react";
+import React,{useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { useNavigate } from "react-router-dom";
 import {
   LoginOutlined,
   ShoppingCartOutlined,
@@ -11,7 +12,7 @@ import {
 import Button from "./Button";
 import { isEmpty } from "../../lib/helpers";
 import { logout } from "../../redux/actions/authActions";
-import { useNavigate } from "react-router-dom";
+import Login from "../pages/Login/Login";
 
 const headerStyle = {
   backgroundColor: "#002B80",
@@ -32,9 +33,15 @@ const Header = () => {
   const { users } = useSelector((state) => state.userReducer);
   const { cart } = useSelector((state) => state.cartReducer);
   const user = users?.find((u) => u.id === loggedInUserId);
+  console.log(loggedInUserId,user);
+  const [isModalOpen, setModalOpen] = useState(false);
 
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+  
   const handleLoginNavigation = () => {
-    console.log("in Login Page");
+    setModalOpen(true);
   };
 
   const handleLogout = () => {
@@ -82,6 +89,7 @@ const Header = () => {
           <ShoppingCartOutlined style={{ color: "white", paddingRight: 6 }} />
         )}
       />
+      <Login isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   );
 };

@@ -2,8 +2,9 @@ const initialState = {
   users: [
     {
       id: "c1",
-      name: "Abhi",
-      type: "store-manager",
+      name: "abhi",
+      type: "storemanager",
+      password: "1234",
     },
   ],
 };
