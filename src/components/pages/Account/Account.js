@@ -12,6 +12,7 @@ const Account = () => {
 
   const handleCancelOrder = (orderId) => {
     dispatch(cancelOrder(orderId));
+    alert(`Canceled Order ${orderId}`);
   };
 
   return (

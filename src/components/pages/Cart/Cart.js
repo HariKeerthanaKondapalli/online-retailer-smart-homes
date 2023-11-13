@@ -14,6 +14,7 @@ const Cart = () => {
 
   const handleRemoveItem = (itemId) => {
     dispatch(removeFromCart(itemId));
+    alert(`Removed Item from cart ${itemId}`);
   };
 
   const handleCheckout = () => {

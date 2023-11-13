@@ -122,6 +122,30 @@ const Order = () => {
               Customer Address: [Address not required for In Store Pickup]
             </p>
             <div style={styles.formItem}>
+              <label htmlFor="delivery-action" style={styles.label}>
+                ZipCode:{" "}
+              </label>
+              <select
+                id="type"
+                value={orderDetails?.address?.zipcode}
+                onChange={(e) =>
+                  setOrderDetails({
+                    ...orderDetails,
+                    address: {
+                      ...orderDetails?.address,
+                      zipcode: e.target.value,
+                    },
+                  })
+                }
+                required
+              >
+                <option value="24356">24356</option>
+                <option value="45678">45678</option>
+                <option value="78908">78908</option>
+                <option value="56789">56789</option>
+              </select>
+            </div>
+            <div style={styles.formItem}>
               <label htmlFor="street" style={styles.label}>
                 Street:{" "}
               </label>
