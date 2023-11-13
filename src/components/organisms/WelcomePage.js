@@ -1,28 +1,45 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { userTypes } from "../../constants";
+import { categories, userTypes } from "../../constants";
 
 import SmartHomes from "../../assets/smartHomes.jpg";
 import Button from "./Button";
-import { cancelOrder } from "../../redux/actions/cartActions";
+import { cancelOrder, removeProduct } from "../../redux/actions/cartActions";
 import Register from "../pages/Login/Register";
+import UpdateProduct from "../pages/Login/UpdateProductModal";
 
 const WelcomePage = () => {
   const dispatch = useDispatch();
   const { loggedInUserId } = useSelector((state) => state.authReducer);
   const { users } = useSelector((state) => state.userReducer);
-  const { orders } = useSelector((state) => state.cartReducer);
+  const { orders, products } = useSelector((state) => state.cartReducer);
   const user = users?.find((u) => u.id === loggedInUserId);
   const [showUserRegisterForm, setShowUserRegisterForm] = useState(false);
+  const [showProductUpdateForm, setShowProductUpdateForm] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState({});
+  const [categoryId, setCategoryId] = useState("1");
+  const requiredProducts = products?.filter(
+    (item) => item.category.toString() === categoryId
+  );
 
   const handleCancelOrder = (orderId) => {
     dispatch(cancelOrder(orderId));
     alert(`Canceled order ${orderId}`);
   };
 
+  const handleDeleteProduct = (productId) => {
+    dispatch(removeProduct(productId));
+    alert(`Product deleted ${productId}`);
+  };
+
   const handleRegisterModal = () => {
     setShowUserRegisterForm(!showUserRegisterForm);
+  };
+
+  const handleUpdateModal = (product) => {
+    setShowProductUpdateForm(!showProductUpdateForm);
+    setSelectedProduct(product);
   };
 
   const renderCustomerHome = () => (
@@ -36,9 +53,60 @@ const WelcomePage = () => {
 
   const renderStoreManagerHome = () => (
     <div>
-      <h1>Welcome Store Manager, {user?.name}</h1>
+      <h2 style={styles.title}>Welcome Store Manager, {user?.name}</h2>
+      <div style={styles.divider} />
+      <Button
+        buttonName="Add Product"
+        buttonStyles={{ ...styles.buttonStyle, marginLeft: 40, marginTop: 40 }}
+        // onClick={handleRegisterModal}
+      />
+      <div style={styles.formItem}>
+        <label htmlFor="delivery-action" style={styles.label}>
+          Select Category:{" "}
+        </label>
+        <select
+          id="type"
+          value={categoryId}
+          onChange={(e) => setCategoryId(e.target.value)}
+          required
+        >
+          {categories?.map((c) => (
+            <option value={c.id}>{c.label}</option>
+          ))}
+        </select>
+      </div>
+      {requiredProducts?.length ? (
+        <div style={styles.usersContainer}>
+          {requiredProducts?.map((product) => (
+            <div key={product.id} style={styles.itemContainer}>
+              <p style={{ width: 200 }}>{product.name}</p>
+              <p style={{ width: 200 }}>Price: {product.price}</p>
+              <Button
+                buttonName="Update"
+                buttonStyles={styles.buttonStyle}
+                onClick={() => handleUpdateModal(product)}
+              />
+              <Button
+                buttonName="Delete"
+                buttonStyles={styles.buttonStyle}
+                onClick={() => handleDeleteProduct(product.id)}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p style={{ paddingLeft: 40 }}>
+          No Products are available in the selected category
+        </p>
+      )}
+      <UpdateProduct
+        isOpen={showProductUpdateForm}
+        setModalOpen={setShowProductUpdateForm}
+        product={selectedProduct}
+      />
     </div>
   );
+
   const renderSalesManagerHome = () => (
     <div>
       <h2 style={styles.title}>Welcome Sales Manager, {user?.name}</h2>
@@ -133,6 +201,27 @@ const styles = {
   buttonStyle: {
     backgroundColor: "#002B80",
   },
+  formItem: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  label: {
+    width: "20%",
+    paddingLeft: 40,
+  },
+  input: (isFixed) => ({
+    ...(isFixed
+      ? {
+          borderWidth: 0,
+          paddingTop: 20,
+          fontSize: 16,
+          marginLeft: 10,
+        }
+      : {
+          paddingTop: 20,
+        }),
+  }),
 };
 
 export default WelcomePage;

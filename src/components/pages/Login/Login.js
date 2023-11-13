@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./LoginModal.css"; // Import your CSS file for styling
+import "./LoginModal.css";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../../redux/actions/authActions";
 import Button from "../../organisms/Button";

@@ -3,7 +3,7 @@ const initialState = {
     {
       id: "c1",
       name: "abhi",
-      type: "salesmanager",
+      type: "storemanager",
       password: "1234",
     },
   ],

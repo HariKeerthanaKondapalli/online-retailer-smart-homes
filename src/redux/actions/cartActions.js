@@ -28,6 +28,21 @@ const cancelOrder = (orderId) => ({
   payload: orderId,
 });
 
+const addProduct = (product) => ({
+  type: "ADD_PRODUCT",
+  payload: product,
+});
+
+const removeProduct = (productId) => ({
+  type: "DELETE_PRODUCT",
+  payload: productId,
+});
+
+const updateProduct = (product) => ({
+  type: "UPDATE_PRODUCT",
+  payload: product,
+});
+
 export {
   addToCart,
   removeFromCart,
@@ -35,4 +50,7 @@ export {
   setSelectedCategory,
   placeOrder,
   cancelOrder,
+  removeProduct,
+  updateProduct,
+  addProduct,
 };

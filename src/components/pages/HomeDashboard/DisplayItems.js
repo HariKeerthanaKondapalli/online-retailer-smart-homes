@@ -1,13 +1,19 @@
 import React from "react";
 import DisplayItem from "./DisplayItem";
+import { useSelector } from "react-redux";
 
 const DisplayItems = ({ category, handleCart }) => {
+  const { products } = useSelector((state) => state.cartReducer);
+  const requiredProducts = products.filter(
+    (item) => item.category === category.id
+  );
+
   return (
     <div>
       <h2 style={styles.title}>{category.title}</h2>
       <div style={styles.divider} />
       <div style={styles.gridContainer}>
-        {category?.items?.map((item) => (
+        {requiredProducts?.map((item) => (
           <div key={item.id} style={styles.gridItem}>
             <DisplayItem item={item} onClick={handleCart} />
           </div>
